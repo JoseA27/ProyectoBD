@@ -1,0 +1,36 @@
+﻿@model IEnumerable<LeadDetailsEntity>
+
+<form asp-controller="Home" method="post">
+
+	<div class="row">
+		<div class="table-responsive">
+			<table class="table table-striped" style="overflow-y:auto;">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Nombre</th>
+						<th>Precio</th>
+					</tr>
+				</thead>
+				<tbody>
+
+					@foreach (var item in Model)
+					{
+						<tr>
+							<td>@item.id</td>
+							<td>@item.Nombre</td>
+							<td>@item.Precio</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<button asp-action="CreateArticle" type="submit" class="btn btn-primary">Insertar Articulo</button>
+</form>
+@if (TempData["Message"] != null) 
+{
+	<script>
+		alert('@TempData["Message"]');
+	</script>
+}
