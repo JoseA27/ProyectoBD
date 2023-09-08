@@ -52,6 +52,10 @@ namespace AWSDB.Controllers
 		{
 			return View();
 		}
+		public IActionResult Upload()
+		{
+			return View();
+		}
 		public IActionResult CreateArticle()
 		{
 			return RedirectToAction("Create", "Home");
