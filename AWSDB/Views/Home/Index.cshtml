@@ -1,4 +1,5 @@
-﻿@model IEnumerable<LeadDetailsEntity>
+﻿
+@model IEnumerable<LeadDetailsEntity>
 
 <form asp-controller="Home" method="post">
 
@@ -13,15 +14,8 @@
 					</tr>
 				</thead>
 				<tbody>
-
-					@foreach (var item in Model)
-					{
-						<tr>
-							<td>@item.id</td>
-							<td>@item.Nombre</td>
-							<td>@item.Precio</td>
-						</tr>
-					}
+					
+					
 				</tbody>
 			</table>
 		</div>

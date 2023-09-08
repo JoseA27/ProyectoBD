@@ -3229,11 +3229,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\josea\\Documents\\GitHub\\PruebaConcepto\\AWSDB\\AWSDB\\AWSDB.csproj",
+      "projectUniqueName": "C:\\Users\\josea\\Documents\\GitHub\\ProyectoBD\\AWSDB\\AWSDB.csproj",
       "projectName": "AWSDB",
-      "projectPath": "C:\\Users\\josea\\Documents\\GitHub\\PruebaConcepto\\AWSDB\\AWSDB\\AWSDB.csproj",
+      "projectPath": "C:\\Users\\josea\\Documents\\GitHub\\ProyectoBD\\AWSDB\\AWSDB.csproj",
       "packagesPath": "C:\\Users\\josea\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\josea\\Documents\\GitHub\\PruebaConcepto\\AWSDB\\AWSDB\\obj\\",
+      "outputPath": "C:\\Users\\josea\\Documents\\GitHub\\ProyectoBD\\AWSDB\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\josea\\AppData\\Roaming\\NuGet\\NuGet.Config",

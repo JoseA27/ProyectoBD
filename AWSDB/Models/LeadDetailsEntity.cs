@@ -22,3 +22,7 @@ public class Articulo
 	[Required]
 	public string Precio { get; set; }
 }
+public class ArchivoViewModel
+{
+	public IFormFile Archivo { get; set; }
+}
