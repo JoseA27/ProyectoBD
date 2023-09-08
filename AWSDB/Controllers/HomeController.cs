@@ -119,25 +119,41 @@ namespace AWSDB.Controllers
 		}
 
 
-		[HttpPost]
 		public async Task<IActionResult> UploadFile(ArchivoViewModel model)
 		{
 			if (model.Archivo != null && model.Archivo.Length > 0)
 			{
-				// Obtén el nombre del archivo y la ruta donde se guardará en el servidor
-				string fileName = Path.GetFileName(model.Archivo.FileName);
-				string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", fileName);
-
-				// Guarda el archivo en el servidor
-				using (var stream = new FileStream(filePath, FileMode.Create))
+				// Leer el contenido del archivo XML
+				using (var reader = new StreamReader(model.Archivo.OpenReadStream()))
 				{
-					await model.Archivo.CopyToAsync(stream);
+					string xmlContent = await reader.ReadToEndAsync();
+
+					// Llamar al Stored Procedure con el contenido XML como parámetro
+					using (SqlConnection connection = new SqlConnection(connetionString))
+					{
+						connection.Open();
+						using (SqlCommand command = new SqlCommand("ProcesarXml", connection))
+						{
+							command.CommandType = CommandType.StoredProcedure;
+
+							// Pasa el contenido XML como parámetro
+							command.Parameters.AddWithValue("@Datos", xmlContent);
+
+							// Configura el parámetro de salida para capturar la contraseña
+							command.Parameters.Add("@outResult", SqlDbType.VarChar, 128).Direction = ParameterDirection.Output;
+
+							command.ExecuteNonQuery();
+
+							// Obtener la contraseña del parámetro de salida
+							string password = Convert.ToString(command.Parameters["@outResult"].Value);
+
+							// Realiza acciones adicionales si es necesario
+
+							TempData["Message"] = "Carga de archivo exitosa y procesamiento XML completado. Contraseña de PRojas: " + password;
+							return RedirectToAction("Index"); // Redirecciona a la página principal u otra página
+						}
+					}
 				}
-
-				// Realiza acciones adicionales si es necesario
-
-				TempData["Message"] = "Carga de archivo exitosa";
-				return RedirectToAction("Index"); // Redirecciona a la página principal u otra página
 			}
 
 			// Maneja el caso en que no se seleccionó ningún archivo
