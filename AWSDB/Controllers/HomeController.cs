@@ -103,6 +103,7 @@ namespace AWSDB.Controllers
 			}
 			*/
 			string nombre = usuario.Nombre;
+			nombre = "DSFNKSAFNOKFDNOK";
 			string password = usuario.Password;
 
 
