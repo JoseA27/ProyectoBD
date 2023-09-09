@@ -18,6 +18,7 @@ namespace AWSDB.Controllers
 		private readonly ApplicationDBContext _db;
 		private readonly IWebHostEnvironment _webHostEnvironment;
 		string connetionString;
+		string Username;
 		public HomeController(ILogger<HomeController> logger, ApplicationDBContext db, IWebHostEnvironment webHostEnvironment)
 		{
 			_db = db;
@@ -102,8 +103,7 @@ namespace AWSDB.Controllers
 				return RedirectToAction("Login", "Home");
 			}
 			*/
-			string nombre = usuario.Nombre;
-			nombre = "DSFNKSAFNOKFDNOK";
+			Username = usuario.Nombre;
 			string password = usuario.Password;
 
 
@@ -115,7 +115,7 @@ namespace AWSDB.Controllers
 				{
 					command.CommandType = CommandType.StoredProcedure;
 
-					command.Parameters.AddWithValue("@inNombre", nombre);
+					command.Parameters.AddWithValue("@inNombre", Username);
 					command.Parameters.AddWithValue("@inPassword", password);
 					command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
 
