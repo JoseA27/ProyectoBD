@@ -56,6 +56,10 @@ namespace AWSDB.Controllers
 		{
 			return View();
 		}
+		public IActionResult Login()
+		{
+			return View();
+		}
 		public IActionResult CreateArticle()
 		{
 			return RedirectToAction("Create", "Home");
@@ -65,46 +69,91 @@ namespace AWSDB.Controllers
 			return RedirectToAction("Upload", "Home");
 		}
 
-		public IActionResult actualizar(Articulo articulo)
+		public IActionResult Ingresar(Usuario usuario)
 		{
-			if (validarDatos(articulo.Nombre, articulo.Precio) == false)
+			/*
+			if (validarDatos(usuario.Nombre, usuario.Precio) == false)
 			{
 				TempData["Message"] = "Ingrese la informacion del articulo de forma correcta. Nombre: Solo puede contener letras, espacio y guiones. Precio: Solo puede contener numeros enteros o decimales";
-				return RedirectToAction("Create", "Home");
+				return RedirectToAction("Login", "Home");
 			}
-			string nombre = articulo.Nombre;
-			decimal precio = Convert.ToDecimal(articulo.Precio);
+			*/
+			string nombre = usuario.Nombre;
+			string password = usuario.Password;
 
 
 			using (SqlConnection connection = new SqlConnection(connetionString))
 			{
 				connection.Open();
-				using (SqlCommand command = new SqlCommand("AddArticulo", connection))
+
+				using (SqlCommand command = new SqlCommand("Login", connection))
 				{
 					command.CommandType = CommandType.StoredProcedure;
 
 					command.Parameters.AddWithValue("@inNombre", nombre);
-					command.Parameters.AddWithValue("@inPrecio", precio);
+					command.Parameters.AddWithValue("@inPassword", password);
 					command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
 
 					command.ExecuteNonQuery();
 
 					int resultCode = Convert.ToInt32(command.Parameters["@outResultCode"].Value);
+
+					//int resultCode = 3335;
 					connection.Close();
-					if (resultCode == 50002)
+					if (resultCode != 50002)
 					{
-						TempData["Message"] = "Nombre de articulo ya existe";
-						return RedirectToAction("Create", "Home");
+						TempData["Message"] = "El usuario no existe o la contrasenna es incorrecta";
+						return RedirectToAction("Login", "Home");
 					}
 					else
 					{
-						TempData["Message"] = "Insercion exitosa";
+						TempData["Message"] = "Login exitoso";
 						return RedirectToAction("Index", "Home");
 					}
 				}
 			}
 		}
-		public bool validarDatos(string nombre, string precio)
+
+        public IActionResult actualizar(Articulo articulo)
+        {
+            if (validarDatos(articulo.Nombre, articulo.Precio) == false)
+            {
+                TempData["Message"] = "Ingrese la informacion del articulo de forma correcta. Nombre: Solo puede contener letras, espacio y guiones. Precio: Solo puede contener numeros enteros o decimales";
+                return RedirectToAction("Create", "Home");
+            }
+            string nombre = articulo.Nombre;
+            decimal precio = Convert.ToDecimal(articulo.Precio);
+
+
+            using (SqlConnection connection = new SqlConnection(connetionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("AddArticulo", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@inNombre", nombre);
+                    command.Parameters.AddWithValue("@inPrecio", precio);
+                    command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+
+                    command.ExecuteNonQuery();
+
+                    int resultCode = Convert.ToInt32(command.Parameters["@outResultCode"].Value);
+                    connection.Close();
+                    if (resultCode == 50002)
+                    {
+                        TempData["Message"] = "Nombre de articulo ya existe";
+                        return RedirectToAction("Create", "Home");
+                    }
+                    else
+                    {
+                        TempData["Message"] = "Insercion exitosa";
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+            }
+        }
+        public bool validarDatos(string nombre, string precio)
 		{
 			if (nombre == null || precio == null) { return false; }
 			var regex = @"^(?!.*\s{2,})[a-zA-Z\-][a-zA-Z\- ]*[a-zA-Z\-]$";
@@ -149,8 +198,8 @@ namespace AWSDB.Controllers
 
 							// Realiza acciones adicionales si es necesario
 
-							TempData["Message"] = "Carga de archivo exitosa y procesamiento XML completado. Contraseña de PRojas: " + password;
-							return RedirectToAction("Index"); // Redirecciona a la página principal u otra página
+							TempData["Message"] = "Carga de archivo exitosa y procesamiento XML completado.";
+							return RedirectToAction("Login"); // Redirecciona a la página principal u otra página
 						}
 					}
 				}

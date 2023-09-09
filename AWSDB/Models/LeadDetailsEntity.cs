@@ -26,3 +26,12 @@ public class ArchivoViewModel
 {
 	public IFormFile Archivo { get; set; }
 }
+
+public class Usuario
+{
+	[Required]
+	public string Nombre { get; set; }
+
+	[Required]
+	public string Password { get; set; }
+}
