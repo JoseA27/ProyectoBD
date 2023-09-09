@@ -1,6 +1,5 @@
 ﻿
-@model IEnumerable<LeadDetailsEntity>
-
+@model Articulo
 <form asp-controller="Index" method="post">
 
 	<div class="row">
@@ -8,19 +7,56 @@
 			<table class="table table-striped" style="overflow-y:auto;">
 				<thead>
 					<tr>
-						<th>ID</th>
+						<th>Codigo</th>
 						<th>Nombre</th>
+						<th>Clase</th>
 						<th>Precio</th>
 					</tr>
 				</thead>
 				<tbody>
-					
-					
+
+					<div class="input-group">
+						<label asp-for="Nombre"></label>
+						<input asp-for="Nombre" class="form-control" class = "col-8"/>
+						<div class= "input-group-append">
+							<button asp-action="" type="submit" class="btn btn-primary">Buscar por nombre</button>
+						</div>
+					</div>
+
+					<div class="input-group">
+						<label asp-for="Cantidad"></label>
+						<input asp-for="Cantidad" class="form-control" class="col-8" />
+						<div class="input-group-append">
+							<button asp-action="" type="submit" class="btn btn-primary">Buscar por cantidad</button>
+							
+						</div>
+					</div>
+
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<select class="form-control">
+									<option>Seleccionar articulo</option>
+									<option>Articulo 1</option>
+									<option>Articulo 2</option>
+									<option>Articulo 3</option>
+								</select>
+								<button asp-action="" type="submit" class="btn btn-primary">Buscar por Articulo</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="input-group-append">
+						<button asp-action="CreateArticle" type="submit" class="btn btn-primary">Insertar</button>
+						<button asp-action="ModifyValidation" type="submit" class="btn btn-primary">Modificar</button>
+						<button asp-action="EraseValidation" type="submit" class="btn btn-primary">Borrar</button>
+						<button asp-action="VolverLogin" type="submit" class="btn btn-primary">Salir</button>
+					</div>
+
 				</tbody>
 			</table>
 		</div>
 	</div>
-	<button asp-action="CreateArticle" type="submit" class="btn btn-primary">Insertar Articulo</button>
 	
 </form>
 @if (TempData["Message"] != null) 

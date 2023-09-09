@@ -48,21 +48,45 @@ namespace AWSDB.Controllers
 		{
 			return RedirectToAction("Index", "Home");
 		}
-		public IActionResult Create()
+		public IActionResult VolverLogin()
 		{
-			return View();
+			return RedirectToAction("Login", "Home");
 		}
-		public IActionResult Upload()
-		{
-			return View();
-		}
+		
+		
 		public IActionResult Login()
+		{
+			return View();
+		}
+
+		public IActionResult Create()
 		{
 			return View();
 		}
 		public IActionResult CreateArticle()
 		{
 			return RedirectToAction("Create", "Home");
+		}
+		public IActionResult ModifyValidation()
+		{
+			return View();
+		}
+		public IActionResult ModifyV()
+		{
+			return RedirectToAction("ModifyValidation", "Home");
+		}
+
+		public IActionResult EraseValidation()
+		{
+			return View();
+		}
+		public IActionResult EraseV()
+		{
+			return RedirectToAction("EraseValidation", "Home");
+		}
+		public IActionResult Upload()
+		{
+			return View();
 		}
 		public IActionResult VistaUpload ()
 		{
@@ -197,7 +221,7 @@ namespace AWSDB.Controllers
 							string password = Convert.ToString(command.Parameters["@outResult"].Value);
 
 							// Realiza acciones adicionales si es necesario
-
+							connection.Close();
 							TempData["Message"] = "Carga de archivo exitosa y procesamiento XML completado.";
 							return RedirectToAction("Login"); // Redirecciona a la página principal u otra página
 						}
