@@ -191,15 +191,18 @@ namespace AWSDB.Controllers
 			}
 		}
 		
-        public IActionResult actualizar(Articulo articulo)
+        public IActionResult Insertar(CombinedViewModel model)
         {
-            /*if (validarDatos(articulo.Nombre, articulo.Precio) == false)
+            if (validarDatos(model.NewArticulo.Nombre, model.NewArticulo.Precio) == false)
             {
                 TempData["Message"] = "Ingrese la informacion del articulo de forma correcta. Nombre: Solo puede contener letras, espacio y guiones. Precio: Solo puede contener numeros enteros o decimales";
                 return RedirectToAction("Create", "Home");
-            }*/
-            string nombre = articulo.Nombre;
-            decimal precio = Convert.ToDecimal(articulo.Precio);
+            }
+            string nombre = model.NewArticulo.Nombre;
+            decimal precio = Convert.ToDecimal(model.NewArticulo.Precio);
+			string codigo = model.NewArticulo.Codigo;
+			string username = "admin";
+            string claseArticulo = Request.Form["selectClase"];
 
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -211,6 +214,9 @@ namespace AWSDB.Controllers
 
                     command.Parameters.AddWithValue("@inNombre", nombre);
                     command.Parameters.AddWithValue("@inPrecio", precio);
+                    command.Parameters.AddWithValue("@inCodigo", codigo);
+					command.Parameters.AddWithValue("@inClaseArticulo", claseArticulo);
+                    command.Parameters.AddWithValue("@inUserName", username);
                     command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
 
                     command.ExecuteNonQuery();
@@ -219,7 +225,11 @@ namespace AWSDB.Controllers
                     connection.Close();
                     if (resultCode == 50002)
                     {
-                        TempData["Message"] = "Nombre de articulo ya existe";
+                        TempData["Message"] = "Articulo con nombre duplicado";
+                        return RedirectToAction("Create", "Home");
+                    }
+					else if(resultCode==50003) {
+                        TempData["Message"] = "Articulo con código duplicado”)";
                         return RedirectToAction("Create", "Home");
                     }
                     else

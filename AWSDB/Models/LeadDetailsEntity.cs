@@ -49,7 +49,7 @@ public class Articulo
 	public string ClaseArticulo { get; set; }
 
 	[Required]
-	public decimal Precio { get; set; }
+	public string Precio { get; set; }
 
 	[Required]
 	public string Cantidad { get; set; }
