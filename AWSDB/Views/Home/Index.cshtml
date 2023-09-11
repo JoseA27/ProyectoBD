@@ -1,46 +1,56 @@
-﻿
-@model Articulo
+﻿@model CombinedViewModel
 <form asp-controller="Index" method="post">
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-striped" style="overflow-y:auto;">
+                <thead>
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Nombre</th>
+                        <th>Clase</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-	<div class="row">
-		<div class="table-responsive">
-			<table class="table table-striped" style="overflow-y:auto;">
-				<thead>
-					<tr>
-						<th>Codigo</th>
-						<th>Nombre</th>
-						<th>Clase</th>
-						<th>Precio</th>
-					</tr>
-				</thead>
-				<tbody>
+                    @foreach (var item in Model.LeadDetails)
+                    {
+                        <tr>
+                            <td>@item.Codigo</td>
+                            <td>@item.Nombre</td>
+                            <td>@item.ClaseArticulo</td>
+                            <td>@item.Precio</td>
+                        </tr>
+                    }
+                </tbody>
+                <tbody>
 
-					<div class="input-group">
-						<label asp-for="Nombre"></label>
-						<input asp-for="Nombre" class="form-control" class = "col-8"/>
-						<div class= "input-group-append">
-							<button asp-action="" type="submit" class="btn btn-primary">Buscar por nombre</button>
-						</div>
-					</div>
+                    <div class="input-group">
+                        <label asp-for="NewArticulo.Nombre"></label>
+                        <input asp-for="NewArticulo.Nombre" class="form-control" class="col-8" />
+                        <div class="input-group-append">
+                            <button asp-action="buscarNombre" type="submit" class="btn btn-primary">Buscar por nombre</button>
+                        </div>
+                    </div>
 
-					<div class="input-group">
-						<label asp-for="Cantidad"></label>
-						<input asp-for="Cantidad" class="form-control" class="col-8" />
-						<div class="input-group-append">
-							<button asp-action="" type="submit" class="btn btn-primary">Buscar por cantidad</button>
-							
-						</div>
-					</div>
+                    <div class="input-group">
+                        <label asp-for="NewArticulo.Cantidad"></label>
+                        <input asp-for="NewArticulo.Cantidad" class="form-control" class="col-8" />
+                        <div class="input-group-append">
+                            <button asp-action="" type="submit" class="btn btn-primary">Buscar por cantidad</button>
+
+                        </div>
+                    </div>
 
 					<div class="input-group">
 						<div class="input-group-prepend">
 							<div class="input-group-text">
 								<select class="form-control">
-									<option>Seleccionar articulo</option>
-									<option>Articulo 1</option>
-									<option>Articulo 2</option>
-									<option>Articulo 3</option>
-								</select>
+                                    @foreach (var item in Model.NewCA)
+                                    {
+                                        <option value="@item.Nombre">"@item.Nombre"</option>
+                                    }
+                                </select>
 								<button asp-action="" type="submit" class="btn btn-primary">Buscar por Articulo</button>
 							</div>
 						</div>

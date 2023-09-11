@@ -8,6 +8,8 @@ namespace AWSDB.Data
         public ApplicationDBContext(DbContextOptions options) : base(options) { }
 
         public DbSet<LeadDetailsEntity> Articulo { get; set; }
+
+        public DbSet<ClaseArticulo> ClaseArticulo { get; set; }
     }
 
 }

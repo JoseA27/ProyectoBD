@@ -1,9 +1,9 @@
 ﻿
 @model CombinedViewModel
 
-<h2>Insertar Nuevo Articulo</h2>
+<h2>Modificar Articulo</h2>
 
-<form asp-controller="Article" asp-action="Create" method="post">
+<form asp-controller="Article" asp-action="Modify" method="post">
 
     <div class="form-group">
         <label asp-for="NewArticulo.Codigo"></label>
@@ -34,7 +34,7 @@
         <input asp-for="NewArticulo.Precio" class="form-control" />
     </div>
 
-    <button asp-action="actualizar" type="submit" class="btn btn-primary">Insertar</button>
+    <button asp-action="" type="submit" class="btn btn-primary">Insertar</button>
     <button asp-action="Volver" type="submit" class="btn btn-primary">Cerrar</button>
 
 </form>

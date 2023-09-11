@@ -1,16 +1,16 @@
 ﻿
-@model Articulo
+@model CombinedViewModel
 
 <h2>Borrar Articulo</h2>
 
 <form asp-controller="Article" asp-action="EraseValidation" method="post">
 
     <div class="form-group">
-        <label asp-for="Codigo">Inserte Codigo</label>
-        <input asp-for="Codigo" class="form-control" />
+        <label asp-for="NewArticulo.Codigo">Inserte Codigo</label>
+        <input asp-for="NewArticulo.Codigo" class="form-control" />
     </div>
 
-    <button asp-action="" type="submit" class="btn btn-primary">Ok</button>
+    <button asp-action="EraseArticle" type="submit" class="btn btn-primary">Ok</button>
     <button asp-action="Volver" type="submit" class="btn btn-primary">Cerrar</button>
 
 </form>

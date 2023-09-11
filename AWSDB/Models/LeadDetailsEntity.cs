@@ -7,12 +7,21 @@ using AWSDB.Models;
 
 namespace AWSDB.Models
 {
-    public class LeadDetailsEntity
+	public class LeadDetailsEntity
+	{
+		[Key]
+		public int id { get; set; }
+		public string Codigo { get; set; }
+		public string Nombre { get; set; }
+		public string ClaseArticulo { get; set; }
+		public decimal Precio { get; set; }
+	}
+
+    public class ClaseArticulo
     {
-        public string Codigo { get; set; }
+        [Key]
+        public int id { get; set; }
         public string Nombre { get; set; }
-        public string ClaseArticulo { get; set; }
-        public decimal Precio { get; set;}  
     }
 }
 
@@ -21,9 +30,16 @@ public class CombinedViewModel
 	public IEnumerable<LeadDetailsEntity> LeadDetails { get; set; }
 
 	public Articulo NewArticulo { get; set; }
+
+    public List<AWSDB.Models.ClaseArticulo> NewCA { get; set; }
 }
+
+
 public class Articulo
 {
+	[Required]
+	public int id { get; set; }
+
 	[Required]
 	public string Codigo { get; set; }
 
@@ -33,7 +49,7 @@ public class Articulo
 	public string ClaseArticulo { get; set; }
 
 	[Required]
-	public string Precio { get; set; }
+	public decimal Precio { get; set; }
 
 	[Required]
 	public string Cantidad { get; set; }

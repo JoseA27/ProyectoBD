@@ -1,0 +1,49 @@
+﻿
+@model CombinedViewModel
+
+<h2>Borrar Articulo</h2>
+
+<form asp-controller="Article" asp-action="Erase" method="post">
+
+	<div class="input-group">
+		<label asp-for="NewArticulo.Codigo"></label>
+		<div class="input-group-append">
+			<label class="Texto-Borrar">XXXXXX</label>
+		</div>
+	</div>
+
+	<div class="input-group">
+		<label asp-for="NewArticulo.Nombre"></label>
+		<div class="input-group-append">
+			<label class="Texto-Borrar">XXXXXX</label>
+		</div>
+	</div>
+
+	<div class="input-group">
+		<label asp-for="NewArticulo.ClaseArticulo"></label>
+		<div class="input-group-append">
+			<label class="Texto-Borrar">XXXXXX</label>
+		</div>
+	</div>
+
+	<div class="input-group">
+		<label asp-for="NewArticulo.Precio"></label>
+		<div class="input-group-append">
+			<label class="Texto-Borrar">XXXXXX</label>
+		</div>
+	</div>
+
+	<div>
+		<label>Confirme para Borrar: </label>
+		
+	</div>
+    <button asp-action="" type="submit" class="btn btn-primary">Confirmar</button>
+    <button asp-action="Volver" type="submit" class="btn btn-primary">Cancelar</button>
+
+</form>
+@if (TempData["Message"] != null)
+{
+    <script>
+        alert('@TempData["Message"]');
+    </script>
+}

@@ -17,14 +17,17 @@ namespace AWSDB.Controllers
 		private readonly ILogger<HomeController> _logger;
 		private readonly ApplicationDBContext _db;
 		private readonly IWebHostEnvironment _webHostEnvironment;
-		string connetionString;
+		string connectionString;
 		string Username;
-		public HomeController(ILogger<HomeController> logger, ApplicationDBContext db, IWebHostEnvironment webHostEnvironment)
+		//private List<LeadDetailsEntity> getArticulos;
+        //private List<ClaseArticulo> getClaseArticulos;
+
+        public HomeController(ILogger<HomeController> logger, ApplicationDBContext db, IWebHostEnvironment webHostEnvironment)
 		{
 			_db = db;
 			_logger = logger;
 			_webHostEnvironment = webHostEnvironment;
-			connetionString = "server=tecdb.ctfxom3mv69f.us-east-2.rds.amazonaws.com,1433;Database=WebLeads;TrustServerCertificate=True;User ID=admin;Password=tecaws123;";
+			connectionString = "server=tecdb.ctfxom3mv69f.us-east-2.rds.amazonaws.com,1433;Database=WebLeads;TrustServerCertificate=True;User ID=admin;Password=tecaws123;";
 		}
 
 		public IActionResult Privacy()
@@ -37,15 +40,35 @@ namespace AWSDB.Controllers
 		{
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 		}
+        public IActionResult Index()
+        {
+            CombinedViewModel views = new CombinedViewModel();
 
-		public IActionResult Index()
-		{
-			//var getArticulo = _db.Articulo.FromSqlRaw("getArticulo").ToList();
-			//return View(getArticulo);
-			return View();
-		}
+            var getArticulo = _db.Articulo.FromSqlRaw("ObtenerArticulos").ToList();
+            var getClaseArticulo = _db.ClaseArticulo.FromSqlRaw("ObtenerNombreClase").ToList();
+            views.NewCA = getClaseArticulo;
+            views.LeadDetails = getArticulo;
+            return View(views);
+        }
+        /*public IActionResult Index()
+        {
+            CombinedViewModel views = new CombinedViewModel();
+            var getArticulo = (List<LeadDetailsEntity>)ViewBag.Articulos;
+            var getClaseArticulo = (List<ClaseArticulo>)ViewBag.ClaseArticulos;
+            views.NewCA = getClaseArticulo;
+            views.LeadDetails = getArticulo;
+            return View(views);
+        }
 
-		public IActionResult Volver()
+     
+        public CombinedViewModel IndexFiltro(List<LeadDetailsEntity> listaArticulo)
+        {
+            CombinedViewModel views = new CombinedViewModel();
+            views.LeadDetails = listaArticulo;
+
+            return views;
+        }*/
+        public IActionResult Volver()
 		{
 			return RedirectToAction("Index", "Home");
 		}
@@ -54,7 +77,6 @@ namespace AWSDB.Controllers
 			return RedirectToAction("Login", "Home");
 		}
 		
-		
 		public IActionResult Login()
 		{
 			return View();
@@ -62,7 +84,10 @@ namespace AWSDB.Controllers
 
 		public IActionResult Create()
 		{
-			return View();
+            var getClaseArticulo = _db.ClaseArticulo.FromSqlRaw("ObtenerNombreClase").ToList();
+            CombinedViewModel views = new CombinedViewModel();
+            views.NewCA = getClaseArticulo;
+            return View(views);
 		}
 		public IActionResult CreateArticle()
 		{
@@ -77,13 +102,33 @@ namespace AWSDB.Controllers
 			return RedirectToAction("ModifyValidation", "Home");
 		}
 
-		public IActionResult EraseValidation()
+        public IActionResult Modify()
+        {
+            var getClaseArticulo = _db.ClaseArticulo.FromSqlRaw("ObtenerNombreClase").ToList();
+            CombinedViewModel views = new CombinedViewModel();
+            views.NewCA = getClaseArticulo;
+            return View(views);
+        }
+        public IActionResult ModifyArticle()
+        {
+            return RedirectToAction("Modify", "Home");
+        }
+
+        public IActionResult EraseValidation()
 		{
 			return View();
 		}
 		public IActionResult EraseV()
 		{
 			return RedirectToAction("EraseValidation", "Home");
+		}
+		public IActionResult Erase()
+		{
+			return View();
+		}
+		public IActionResult EraseArticle()
+		{
+			return RedirectToAction("Erase", "Home");
 		}
 		public IActionResult Upload()
 		{
@@ -93,6 +138,8 @@ namespace AWSDB.Controllers
 		{
 			return RedirectToAction("Upload", "Home");
 		}
+
+
 
 		public IActionResult Ingresar(Usuario usuario)
 		{
@@ -107,7 +154,7 @@ namespace AWSDB.Controllers
 			string password = usuario.Password;
 
 
-			using (SqlConnection connection = new SqlConnection(connetionString))
+			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
 				connection.Open();
 
@@ -133,24 +180,29 @@ namespace AWSDB.Controllers
 					else
 					{
 						TempData["Message"] = "Login exitoso";
-						return RedirectToAction("Index", "Home");
-					}
-				}
+
+                        
+
+
+
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
 			}
 		}
-
+		
         public IActionResult actualizar(Articulo articulo)
         {
-            if (validarDatos(articulo.Nombre, articulo.Precio) == false)
+            /*if (validarDatos(articulo.Nombre, articulo.Precio) == false)
             {
                 TempData["Message"] = "Ingrese la informacion del articulo de forma correcta. Nombre: Solo puede contener letras, espacio y guiones. Precio: Solo puede contener numeros enteros o decimales";
                 return RedirectToAction("Create", "Home");
-            }
+            }*/
             string nombre = articulo.Nombre;
             decimal precio = Convert.ToDecimal(articulo.Precio);
 
 
-            using (SqlConnection connection = new SqlConnection(connetionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 using (SqlCommand command = new SqlCommand("AddArticulo", connection))
@@ -191,10 +243,59 @@ namespace AWSDB.Controllers
 			}
 			return false;
 		}
-
-
-		public async Task<IActionResult> UploadFile(ArchivoViewModel model)
+		/*
+		public IActionResult buscarNombre(CombinedViewModel model)
 		{
+			string nombre = model.NewArticulo.Nombre;
+			string username = "admin";
+
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+				using (SqlCommand command = new SqlCommand("FiltroNombre", connection))
+				{
+					command.CommandType = CommandType.StoredProcedure;
+
+					command.Parameters.AddWithValue("@inNombre", nombre);
+					command.Parameters.AddWithValue("@inUserName", username);
+					command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+					using (SqlDataReader reader = command.ExecuteReader())
+					{
+						List<LeadDetailsEntity> listaArticulo = new List<LeadDetailsEntity>();
+
+						while (reader.Read())
+						{
+							LeadDetailsEntity resultArticulo = new LeadDetailsEntity();
+
+							resultArticulo.Codigo = reader["Codigo"].ToString();
+							resultArticulo.Nombre = reader["Nombre"].ToString();
+							resultArticulo.ClaseArticulo = reader["ClaseArticulo"].ToString();
+							resultArticulo.Precio = Convert.ToDecimal(reader["Precio"]);
+							resultArticulo.id = 0;
+
+							listaArticulo.Add(resultArticulo);
+						}
+
+						int resultCode = Convert.ToInt32(command.Parameters["@outResultCode"].Value);
+						connection.Close();
+
+						if (resultCode == 50001)
+						{
+
+							return RedirectToAction("Index", "Home", new { view = ObtenerArticulosBase() });
+						}
+						else
+						{
+
+							return RedirectToAction("Index", "Home", new { view = IndexFiltro(listaArticulo) });
+						}
+					}
+				}
+			}
+		}
+		*/
+        public async Task<IActionResult> UploadFile(ArchivoViewModel model)
+				{
 			if (model.Archivo != null && model.Archivo.Length > 0)
 			{
 				// Leer el contenido del archivo XML
@@ -203,7 +304,7 @@ namespace AWSDB.Controllers
 					string xmlContent = await reader.ReadToEndAsync();
 
 					// Llamar al Stored Procedure con el contenido XML como parámetro
-					using (SqlConnection connection = new SqlConnection(connetionString))
+					using (SqlConnection connection = new SqlConnection(connectionString))
 					{
 						connection.Open();
 						using (SqlCommand command = new SqlCommand("ProcesarXml", connection))
