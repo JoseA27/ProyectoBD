@@ -18,7 +18,7 @@
     <div class="input-group">
         <div class="input-group-prepend">
             <div class="input-group-text">
-                <select class="form-control">
+                <select name="selectClase" class="form-control">
                     @foreach (var item in Model.NewCA)
                     {
                         <option value="@item.Nombre">"@item.Nombre"</option>
@@ -34,8 +34,18 @@
         <input asp-for="NewArticulo.Precio" class="form-control" />
     </div>
 
-    <button asp-action="" type="submit" class="btn btn-primary">Insertar</button>
+    <button asp-action="Modificar" type="submit" class="btn btn-primary">Insertar</button>
     <button asp-action="Volver" type="submit" class="btn btn-primary">Cerrar</button>
+
+
+    <div class="form-group" style="display:none;">
+        <label asp-for="Codigo">@Model.Codigo</label>
+        <input asp-for="Codigo" class="form-control" />
+    </div>
+    <div class="form-group" style="display:none;">
+        <label asp-for="UserName">@Model.UserName</label>
+        <input asp-for="UserName" class="form-control" />
+    </div>
 
 </form>
 @if (TempData["Message"] != null)

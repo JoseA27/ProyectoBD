@@ -18,7 +18,6 @@ namespace AWSDB.Controllers
 		private readonly ApplicationDBContext _db;
 		private readonly IWebHostEnvironment _webHostEnvironment;
 		string connectionString;
-		string Username;
 		//private List<LeadDetailsEntity> getArticulos;
         //private List<ClaseArticulo> getClaseArticulos;
 
@@ -40,7 +39,7 @@ namespace AWSDB.Controllers
 		{
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 		}
-        public IActionResult Index()
+        public IActionResult Index(string user)
         {
             CombinedViewModel views = new CombinedViewModel();
 
@@ -48,6 +47,7 @@ namespace AWSDB.Controllers
             var getClaseArticulo = _db.ClaseArticulo.FromSqlRaw("ObtenerNombreClase").ToList();
             views.NewCA = getClaseArticulo;
             views.LeadDetails = getArticulo;
+			views.UserName = user;
             return View(views);
         }
         /*public IActionResult Index()
@@ -82,31 +82,38 @@ namespace AWSDB.Controllers
 			return View();
 		}
 
-		public IActionResult Create()
+		public IActionResult Create(string user)
 		{
             var getClaseArticulo = _db.ClaseArticulo.FromSqlRaw("ObtenerNombreClase").ToList();
             CombinedViewModel views = new CombinedViewModel();
             views.NewCA = getClaseArticulo;
+			views.UserName = user;
             return View(views);
 		}
 		public IActionResult CreateArticle()
 		{
 			return RedirectToAction("Create", "Home");
 		}
-		public IActionResult ModifyValidation()
+		public IActionResult ModifyValidation(string user)
 		{
-			return View();
-		}
-		public IActionResult ModifyV()
-		{
-			return RedirectToAction("ModifyValidation", "Home");
+            CombinedViewModel views = new CombinedViewModel();
+            views.UserName = user;
+            return View(views);
 		}
 
-        public IActionResult Modify()
+        
+        public IActionResult ModifyV(CombinedViewModel model)
+		{
+			return RedirectToAction("ModifyValidation", "Home", new {user = model.UserName });
+		}
+
+        public IActionResult Modify(string user, string code)
         {
             var getClaseArticulo = _db.ClaseArticulo.FromSqlRaw("ObtenerNombreClase").ToList();
             CombinedViewModel views = new CombinedViewModel();
             views.NewCA = getClaseArticulo;
+			views.Codigo = code;
+			views.UserName = user;
             return View(views);
         }
         public IActionResult ModifyArticle()
@@ -150,7 +157,7 @@ namespace AWSDB.Controllers
 				return RedirectToAction("Login", "Home");
 			}
 			*/
-			Username = usuario.Nombre;
+			string Username = usuario.Nombre;
 			string password = usuario.Password;
 
 
@@ -181,11 +188,7 @@ namespace AWSDB.Controllers
 					{
 						TempData["Message"] = "Login exitoso";
 
-                        
-
-
-
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Home", new { user = Username });
                     }
                 }
 			}
@@ -201,7 +204,7 @@ namespace AWSDB.Controllers
             string nombre = model.NewArticulo.Nombre;
             decimal precio = Convert.ToDecimal(model.NewArticulo.Precio);
 			string codigo = model.NewArticulo.Codigo;
-			string username = "admin";
+			string username = model.UserName;
             string claseArticulo = Request.Form["selectClase"];
 
 
@@ -226,16 +229,16 @@ namespace AWSDB.Controllers
                     if (resultCode == 50002)
                     {
                         TempData["Message"] = "Articulo con nombre duplicado";
-                        return RedirectToAction("Create", "Home");
+                        return RedirectToAction("Create", "Home", new { user = username });
                     }
 					else if(resultCode==50003) {
                         TempData["Message"] = "Articulo con código duplicado”)";
-                        return RedirectToAction("Create", "Home");
+                        return RedirectToAction("Create", "Home", new { user = username });
                     }
                     else
                     {
                         TempData["Message"] = "Insercion exitosa";
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Home", new { user = username});
                     }
                 }
             }
@@ -304,6 +307,97 @@ namespace AWSDB.Controllers
 			}
 		}
 		*/
+
+
+		public IActionResult validarModificar(CombinedViewModel model)
+		{
+			string codigo = model.NewArticulo.Codigo;
+			string username = model.UserName;
+
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+
+				using (SqlCommand command = new SqlCommand("VerificarCodigo", connection))
+				{
+					command.CommandType = CommandType.StoredProcedure;
+
+					command.Parameters.AddWithValue("@inCodigo", codigo);
+					command.Parameters.AddWithValue("@inUserName", username);
+					command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+
+					command.ExecuteNonQuery();
+
+					int resultCode = Convert.ToInt32(command.Parameters["@outResultCode"].Value);
+
+					//int resultCode = 3335;
+					connection.Close();
+					if (resultCode == 50001)
+					{
+						TempData["Message"] = "Codigo no existe";
+                        return RedirectToAction("ModifyValidation", "Home", new { user = username });
+                    }
+					else
+					{
+						TempData["Message"] = "Codigo de Articulo Existe";
+						return RedirectToAction("Modify", "Home", new {code = codigo, user = username });
+					}
+				}
+			}
+		}
+
+        public IActionResult Modificar(CombinedViewModel model)
+        {
+            if (validarDatos(model.NewArticulo.Nombre, model.NewArticulo.Precio) == false)
+            {
+                TempData["Message"] = "Ingrese la informacion del articulo de forma correcta. Nombre: Solo puede contener letras, espacio y guiones. Precio: Solo puede contener numeros enteros o decimales";
+                return RedirectToAction("Create", "Home");
+            }
+            string nombre = model.NewArticulo.Nombre;
+
+            decimal precio = Convert.ToDecimal(model.NewArticulo.Precio);
+            string codigoNuevo = model.NewArticulo.Codigo;
+            string username = model.UserName;
+            string claseArticulo = Request.Form["selectClase"];
+			string codigo = model.Codigo;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("ModificarArticulo", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@inNombre", nombre);
+                    command.Parameters.AddWithValue("@inPrecio", precio);
+                    command.Parameters.AddWithValue("@inCodigo", codigo);
+                    command.Parameters.AddWithValue("@inCodigoNuevo", codigoNuevo);
+                    command.Parameters.AddWithValue("@inClaseArticulo", claseArticulo);
+                    command.Parameters.AddWithValue("@inUserName", username);
+                    command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+
+                    command.ExecuteNonQuery();
+
+                    int resultCode = Convert.ToInt32(command.Parameters["@outResultCode"].Value);
+                    connection.Close();
+                    if (resultCode == 50002)
+                    {
+                        TempData["Message"] = "Codigo duplicado";
+                        return RedirectToAction("Index", "Home", new { user = username });
+                    }
+                    else if (resultCode == 0)
+                    {
+                        TempData["Message"] = "Modificacion Exitosa”)";
+                        return RedirectToAction("Index", "Home", new { user = username });
+                    }
+                    else
+                    {
+                        TempData["Message"] = "Surgió un error en la BD";
+                        return RedirectToAction("Index", "Home", new { user = username });
+                    }
+                }
+            }
+        }
         public async Task<IActionResult> UploadFile(ArchivoViewModel model)
 				{
 			if (model.Archivo != null && model.Archivo.Length > 0)
