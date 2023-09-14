@@ -8,28 +8,28 @@
 	<div class="input-group">
 		<label asp-for="NewArticulo.Codigo"></label>
 		<div class="input-group-append">
-			<label class="Texto-Borrar">XXXXXX</label>
+			<label class="Texto-Borrar">@Model.NewArticulo.Codigo</label>
 		</div>
 	</div>
 
 	<div class="input-group">
 		<label asp-for="NewArticulo.Nombre"></label>
 		<div class="input-group-append">
-			<label class="Texto-Borrar">XXXXXX</label>
+			<label class="Texto-Borrar">@Model.NewArticulo.Nombre</label>
 		</div>
 	</div>
 
 	<div class="input-group">
 		<label asp-for="NewArticulo.ClaseArticulo"></label>
 		<div class="input-group-append">
-			<label class="Texto-Borrar">XXXXXX</label>
+			<label class="Texto-Borrar">@Model.NewArticulo.ClaseArticulo</label>
 		</div>
 	</div>
 
 	<div class="input-group">
 		<label asp-for="NewArticulo.Precio"></label>
 		<div class="input-group-append">
-			<label class="Texto-Borrar">XXXXXX</label>
+			<label class="Texto-Borrar">@Model.NewArticulo.Precio</label>
 		</div>
 	</div>
 
@@ -37,9 +37,17 @@
 		<label>Confirme para Borrar: </label>
 		
 	</div>
-    <button asp-action="" type="submit" class="btn btn-primary">Confirmar</button>
-    <button asp-action="Volver" type="submit" class="btn btn-primary">Cancelar</button>
+    <button asp-action="Borrar" type="submit" class="btn btn-primary">Confirmar</button>
+	<button asp-action="CancelarBorrar" type="submit" class="btn btn-primary">Cancelar</button>
 
+	<div class="form-group" style="display:none;">
+		<label asp-for="Codigo">@Model.Codigo</label>
+		<input asp-for="Codigo" class="form-control" />
+	</div>
+	<div class="form-group" style="display:none;">
+		<label asp-for="UserName">@Model.UserName</label>
+		<input asp-for="UserName" class="form-control" />
+	</div>
 </form>
 @if (TempData["Message"] != null)
 {

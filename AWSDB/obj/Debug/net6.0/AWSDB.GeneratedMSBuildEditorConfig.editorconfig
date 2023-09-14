@@ -9,65 +9,65 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = AWSDB
 build_property.RootNamespace = AWSDB
-build_property.ProjectDir = C:\Users\josea\Documents\GitHub\ProyectoBD\AWSDB\
+build_property.ProjectDir = C:\Users\isasc\Documents\GitHub\ProyectoBD\AWSDB\
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\josea\Documents\GitHub\ProyectoBD\AWSDB
+build_property.MSBuildProjectDirectory = C:\Users\isasc\Documents\GitHub\ProyectoBD\AWSDB
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/josea/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/Create.cshtml]
+[C:/Users/isasc/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josea/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/Erase.cshtml]
+[C:/Users/isasc/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/Erase.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFcmFzZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josea/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/EraseValidation.cshtml]
+[C:/Users/isasc/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/EraseValidation.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFcmFzZVZhbGlkYXRpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josea/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/Index.cshtml]
+[C:/Users/isasc/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josea/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/Login.cshtml]
+[C:/Users/isasc/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josea/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/Modify.cshtml]
+[C:/Users/isasc/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/Modify.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxNb2RpZnkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josea/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/ModifyValidation.cshtml]
+[C:/Users/isasc/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/ModifyValidation.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxNb2RpZnlWYWxpZGF0aW9uLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josea/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/Privacy.cshtml]
+[C:/Users/isasc/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josea/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/Upload.cshtml]
+[C:/Users/isasc/Documents/GitHub/ProyectoBD/AWSDB/Views/Home/Upload.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxVcGxvYWQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josea/Documents/GitHub/ProyectoBD/AWSDB/Views/Shared/Error.cshtml]
+[C:/Users/isasc/Documents/GitHub/ProyectoBD/AWSDB/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josea/Documents/GitHub/ProyectoBD/AWSDB/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/isasc/Documents/GitHub/ProyectoBD/AWSDB/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josea/Documents/GitHub/ProyectoBD/AWSDB/Views/_ViewImports.cshtml]
+[C:/Users/isasc/Documents/GitHub/ProyectoBD/AWSDB/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josea/Documents/GitHub/ProyectoBD/AWSDB/Views/_ViewStart.cshtml]
+[C:/Users/isasc/Documents/GitHub/ProyectoBD/AWSDB/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/josea/Documents/GitHub/ProyectoBD/AWSDB/Views/Shared/_Layout.cshtml]
+[C:/Users/isasc/Documents/GitHub/ProyectoBD/AWSDB/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-7w4yxc18yc

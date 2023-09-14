@@ -10,9 +10,12 @@
         <input asp-for="NewArticulo.Codigo" class="form-control" />
     </div>
 
-    <button asp-action="EraseArticle" type="submit" class="btn btn-primary">Ok</button>
-    <button asp-action="Volver" type="submit" class="btn btn-primary">Cerrar</button>
-
+    <button asp-action="validarBorrar" type="submit" class="btn btn-primary">Ok</button>
+    <button asp-action="VolverErase" type="submit" class="btn btn-primary">Cerrar</button>
+    <div class="form-group" style="display:none;">
+        <label asp-for="UserName">@Model.UserName</label>
+        <input asp-for="UserName" class="form-control" />
+    </div>
 </form>
 @if (TempData["Message"] != null)
 {

@@ -90,18 +90,28 @@ namespace AWSDB.Controllers
 			views.UserName = user;
             return View(views);
 		}
-		public IActionResult CreateArticle()
+
+        public IActionResult CreateV(CombinedViewModel model)
+        {
+            return RedirectToAction("Create", "Home", new { user = model.UserName });
+        }
+        public IActionResult CreateArticle()
 		{
-			return RedirectToAction("Create", "Home");
+			return RedirectToAction("CreateV", "Home");
 		}
-		public IActionResult ModifyValidation(string user)
+
+        public IActionResult VolverCreate(CombinedViewModel model)
+        {
+
+            return RedirectToAction("Index", "Home", new { user = model.UserName });
+        }
+        public IActionResult ModifyValidation(string user)
 		{
             CombinedViewModel views = new CombinedViewModel();
             views.UserName = user;
             return View(views);
 		}
 
-        
         public IActionResult ModifyV(CombinedViewModel model)
 		{
 			return RedirectToAction("ModifyValidation", "Home", new {user = model.UserName });
@@ -121,23 +131,70 @@ namespace AWSDB.Controllers
             return RedirectToAction("Modify", "Home");
         }
 
-        public IActionResult EraseValidation()
+        public IActionResult VolverModify(CombinedViewModel model)
+        {
+
+            return RedirectToAction("Index", "Home", new { user = model.UserName });
+        }
+
+        public IActionResult EraseValidation(string user)
 		{
-			return View();
+			CombinedViewModel views = new CombinedViewModel();
+			views.UserName = user;
+			return View(views);
 		}
-		public IActionResult EraseV()
+		public IActionResult EraseV(CombinedViewModel model)
 		{
-			return RedirectToAction("EraseValidation", "Home");
+			return RedirectToAction("EraseValidation", "Home", new { user = model.UserName });
 		}
-		public IActionResult Erase()
+		public IActionResult Erase(string user, string code)
 		{
-			return View();
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+				using (SqlCommand command = new SqlCommand("ObtenerArticuloCodigo", connection))
+				{
+					command.CommandType = CommandType.StoredProcedure;
+
+					command.Parameters.AddWithValue("@inCodigo", code);
+					command.Parameters.AddWithValue("@inUserName", user);
+					command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+					using (SqlDataReader reader = command.ExecuteReader())
+					{
+						Articulo resultArticulo = new Articulo();
+						while (reader.Read())
+						{
+							resultArticulo.Codigo = reader["Codigo"].ToString();
+							resultArticulo.Nombre = reader["Nombre"].ToString();
+							resultArticulo.ClaseArticulo = reader["ClaseArticulo"].ToString();
+							resultArticulo.Precio = reader["Precio"].ToString();
+
+						}
+
+						int resultCode = Convert.ToInt32(command.Parameters["@outResultCode"].Value);
+						connection.Close();
+
+						CombinedViewModel views = new CombinedViewModel();
+						views.NewArticulo = resultArticulo;
+						views.Codigo = code;
+						views.UserName = user;
+						return View(views);
+					}
+				}
+			}
+		
 		}
 		public IActionResult EraseArticle()
 		{
 			return RedirectToAction("Erase", "Home");
 		}
-		public IActionResult Upload()
+
+		public IActionResult VolverErase (CombinedViewModel model)
+        {
+            
+            return RedirectToAction("Index", "Home", new { user = model.UserName});
+        }
+        public IActionResult Upload()
 		{
 			return View();
 		}
@@ -305,9 +362,7 @@ namespace AWSDB.Controllers
 					}
 				}
 			}
-		}
-		*/
-
+		}*/
 
 		public IActionResult validarModificar(CombinedViewModel model)
 		{
@@ -345,6 +400,43 @@ namespace AWSDB.Controllers
 				}
 			}
 		}
+
+        public IActionResult validarBorrar(CombinedViewModel model)
+        {
+            string codigo = model.NewArticulo.Codigo;
+            string username = model.UserName;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("VerificarCodigoBorrar", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@inCodigo", codigo);
+                    command.Parameters.AddWithValue("@inUserName", username);
+                    command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+
+                    command.ExecuteNonQuery();
+
+                    int resultCode = Convert.ToInt32(command.Parameters["@outResultCode"].Value);
+
+                    //int resultCode = 3335;
+                    connection.Close();
+                    if (resultCode == 50001)
+                    {
+                        TempData["Message"] = "Codigo no existe";
+                        return RedirectToAction("EraseValidation", "Home", new { user = username });
+                    }
+                    else
+                    {
+                        TempData["Message"] = "Codigo de Articulo Existe";
+                        return RedirectToAction("Erase", "Home", new { code = codigo, user = username });
+                    }
+                }
+            }
+        }
 
         public IActionResult Modificar(CombinedViewModel model)
         {
@@ -398,7 +490,97 @@ namespace AWSDB.Controllers
                 }
             }
         }
-        public async Task<IActionResult> UploadFile(ArchivoViewModel model)
+
+		public IActionResult CancelarModificar(CombinedViewModel model)
+		{
+
+			string username = model.UserName;
+
+			string codigo = model.Codigo;
+
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+				using (SqlCommand command = new SqlCommand("CancelarProceso", connection))
+				{
+					command.CommandType = CommandType.StoredProcedure;
+
+
+					command.Parameters.AddWithValue("@inCodigo", codigo);
+					command.Parameters.AddWithValue("@inCancelar", 1);
+					command.Parameters.AddWithValue("@inUserName", username);
+					command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+
+					command.ExecuteNonQuery();
+
+					int resultCode = Convert.ToInt32(command.Parameters["@outResultCode"].Value);
+					connection.Close();
+					return RedirectToAction("ModifyValidation", "Home", new { user = username });
+				}
+			}
+		}
+		public IActionResult Borrar(CombinedViewModel model)
+		{
+			string username = model.UserName;
+			string codigo = model.Codigo;
+
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+				using (SqlCommand command = new SqlCommand("BorrarArticulo", connection))
+				{
+					command.CommandType = CommandType.StoredProcedure;
+
+					command.Parameters.AddWithValue("@inCodigo", codigo);
+					command.Parameters.AddWithValue("@inUserName", username);
+					command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+
+					command.ExecuteNonQuery();
+
+					int resultCode = Convert.ToInt32(command.Parameters["@outResultCode"].Value);
+					connection.Close();
+					if (resultCode == 0)
+					{
+						TempData["Message"] = "Borrar Exitoso”)";
+						return RedirectToAction("Index", "Home", new { user = username });
+					}
+					else
+					{
+						TempData["Message"] = "Surgió un error en la BD";
+						return RedirectToAction("Index", "Home", new { user = username });
+					}
+				}
+			}
+		}
+		public IActionResult CancelarBorrar(CombinedViewModel model)
+		{
+
+			string username = model.UserName;
+
+			string codigo = model.Codigo;
+
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				connection.Open();
+				using (SqlCommand command = new SqlCommand("CancelarProceso", connection))
+				{
+					command.CommandType = CommandType.StoredProcedure;
+
+
+					command.Parameters.AddWithValue("@inCodigo", codigo);
+					command.Parameters.AddWithValue("@inCancelar", 2);
+					command.Parameters.AddWithValue("@inUserName", username);
+					command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+
+					command.ExecuteNonQuery();
+
+					int resultCode = Convert.ToInt32(command.Parameters["@outResultCode"].Value);
+					connection.Close();
+					return RedirectToAction("EraseValidation", "Home", new { user = username });
+				}
+			}
+		}
+		public async Task<IActionResult> UploadFile(ArchivoViewModel model)
 				{
 			if (model.Archivo != null && model.Archivo.Length > 0)
 			{
