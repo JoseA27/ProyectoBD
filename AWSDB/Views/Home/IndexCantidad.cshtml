@@ -1,5 +1,5 @@
 ﻿@model CombinedViewModel
-<form asp-controller="Index" method="post">
+<form asp-controller="IndexCantidad" method="post">
     <div class="row">
         <div class="table-responsive">
             <table class="table table-striped" style="overflow-y:auto;">
@@ -51,7 +51,7 @@
                                         <option value="@item.Nombre">"@item.Nombre"</option>
                                     }
                                 </select>
-                                <button asp-action="IndexCl" type="submit" class="btn btn-primary">Buscar por Articulo</button>
+								<button asp-action="IndexCl" type="submit" class="btn btn-primary">Buscar por Articulo</button>
 							</div>
 						</div>
 					</div>

@@ -50,6 +50,143 @@ namespace AWSDB.Controllers
 			views.UserName = user;
             return View(views);
         }
+        public IActionResult IndexNombre(string user, string nombre)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FiltroNombre", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@inUserName", user);
+                    command.Parameters.AddWithValue("@inNombre", nombre);
+                    command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        List<LeadDetailsEntity> ListArticulo = new List<LeadDetailsEntity>();
+                        while (reader.Read())
+                        {
+							LeadDetailsEntity resultArticulo = new LeadDetailsEntity();
+                            resultArticulo.Codigo = reader["Codigo"].ToString();
+                            resultArticulo.Nombre = reader["Nombre"].ToString();
+                            resultArticulo.ClaseArticulo = reader["ClaseArticulo"].ToString();
+                            resultArticulo.Precio = Convert.ToDecimal(reader["Precio"].ToString());
+
+							ListArticulo.Add(resultArticulo);
+                        }
+
+                        int resultCode = Convert.ToInt32(command.Parameters["@outResultCode"].Value);
+						connection.Close();
+                        
+
+                        CombinedViewModel views = new CombinedViewModel();
+                        var getClaseArticulo = _db.ClaseArticulo.FromSqlRaw("ObtenerNombreClase").ToList();
+                        views.NewCA = getClaseArticulo;
+                        views.LeadDetails = ListArticulo;
+                        views.UserName = user;
+                        return View(views);
+                    }
+                }
+            }
+        }
+        public IActionResult IndexN(CombinedViewModel model)
+        {
+			if (model.NewArticulo.Nombre==null)
+			{
+                return RedirectToAction("Index", "Home", new { user = model.UserName});
+            }
+            return RedirectToAction("IndexNombre", "Home", new { user = model.UserName, nombre = model.NewArticulo.Nombre });
+        }
+        public IActionResult IndexCantidad(string user, int cantidad)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FiltroCantidad", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@inUserName", user);
+                    command.Parameters.AddWithValue("@inCantidad", cantidad);
+                    command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        List<LeadDetailsEntity> ListArticulo = new List<LeadDetailsEntity>();
+                        while (reader.Read())
+                        {
+                            LeadDetailsEntity resultArticulo = new LeadDetailsEntity();
+                            resultArticulo.Codigo = reader["Codigo"].ToString();
+                            resultArticulo.Nombre = reader["Nombre"].ToString();
+                            resultArticulo.ClaseArticulo = reader["ClaseArticulo"].ToString();
+                            resultArticulo.Precio = Convert.ToDecimal(reader["Precio"].ToString());
+
+                            ListArticulo.Add(resultArticulo);
+                        }
+
+                        int resultCode = Convert.ToInt32(command.Parameters["@outResultCode"].Value);
+                        connection.Close();
+
+
+                        CombinedViewModel views = new CombinedViewModel();
+                        var getClaseArticulo = _db.ClaseArticulo.FromSqlRaw("ObtenerNombreClase").ToList();
+                        views.NewCA = getClaseArticulo;
+                        views.LeadDetails = ListArticulo;
+                        views.UserName = user;
+                        return View(views);
+                    }
+                }
+            }
+        }
+        public IActionResult IndexC(CombinedViewModel model)
+        {
+            if (model.NewArticulo.Cantidad == null)
+            {
+                return RedirectToAction("Index", "Home", new { user = model.UserName });
+            }
+            return RedirectToAction("IndexCantidad", "Home", new { user = model.UserName, cantidad = Convert.ToInt32(model.NewArticulo.Cantidad)});
+        }
+        public IActionResult IndexClase(string user, string clase)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FiltroClase", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@inUserName", user);
+                    command.Parameters.AddWithValue("@inNombreClase", clase);
+                    command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        List<LeadDetailsEntity> ListArticulo = new List<LeadDetailsEntity>();
+                        while (reader.Read())
+                        {
+                            LeadDetailsEntity resultArticulo = new LeadDetailsEntity();
+                            resultArticulo.Codigo = reader["Codigo"].ToString();
+                            resultArticulo.Nombre = reader["Nombre"].ToString();
+                            resultArticulo.ClaseArticulo = reader["ClaseArticulo"].ToString();
+                            resultArticulo.Precio = Convert.ToDecimal(reader["Precio"].ToString());
+
+                            ListArticulo.Add(resultArticulo);
+                        }
+
+                        int resultCode = Convert.ToInt32(command.Parameters["@outResultCode"].Value);
+                        connection.Close();
+
+
+                        CombinedViewModel views = new CombinedViewModel();
+                        var getClaseArticulo = _db.ClaseArticulo.FromSqlRaw("ObtenerNombreClase").ToList();
+                        views.NewCA = getClaseArticulo;
+                        views.LeadDetails = ListArticulo;
+                        views.UserName = user;
+                        return View(views);
+                    }
+                }
+            }
+        }
+        public IActionResult IndexCl(CombinedViewModel model)
+        {
+            return RedirectToAction("IndexClase", "Home", new { user = model.UserName, clase = Request.Form["selectClase"]});
+        }
         /*public IActionResult Index()
         {
             CombinedViewModel views = new CombinedViewModel();
