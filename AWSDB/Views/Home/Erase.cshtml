@@ -37,7 +37,7 @@
 		<label>Confirme para Borrar: </label>
 		
 	</div>
-    <button asp-action="Borrar" type="submit" class="btn btn-primary">Confirmar</button>
+    <button asp-action="Borrar" type="submit" class="btn btn-primary">Ok</button>
 	<button asp-action="CancelarBorrar" type="submit" class="btn btn-primary">Cancelar</button>
 
 	<div class="form-group" style="display:none;">
@@ -49,9 +49,11 @@
 		<input asp-for="UserName" class="form-control" />
 	</div>
 </form>
+
 @if (TempData["Message"] != null)
 {
     <script>
+		
         alert('@TempData["Message"]');
     </script>
 }

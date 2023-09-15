@@ -46,9 +46,14 @@
 						<div class="input-group-prepend">
 							<div class="input-group-text">
                                 <select name="selectClase" class="form-control">
+                                    @{
+                                        var first = Model.NewCA.ElementAtOrDefault(0);
+                                        <option value="@first.Nombre">Seleccione una opcion</option>
+                                    }
+
                                     @foreach (var item in Model.NewCA)
                                     {
-                                        <option value="@item.Nombre">"@item.Nombre"</option>
+                                        <option value="@item.Nombre">@item.Nombre</option>
                                     }
                                 </select>
 								<button asp-action="IndexCl" type="submit" class="btn btn-primary">Buscar por Articulo</button>

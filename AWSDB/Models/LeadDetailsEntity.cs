@@ -33,11 +33,11 @@ public class CombinedViewModel
 
     public List<AWSDB.Models.ClaseArticulo> NewCA { get; set; }
 
+
 	public string Codigo { get; set;}
 
 	public string UserName { get; set;}
 }
-
 
 public class Articulo
 {

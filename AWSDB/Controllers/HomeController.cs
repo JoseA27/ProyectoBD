@@ -209,10 +209,27 @@ namespace AWSDB.Controllers
 		{
 			return RedirectToAction("Index", "Home");
 		}
-		public IActionResult VolverLogin()
-		{
-			return RedirectToAction("Login", "Home");
-		}
+
+        public IActionResult VolverLogin(CombinedViewModel model)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("Salir", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@inUserName", model.UserName);
+                    command.Parameters.Add("@outResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    command.ExecuteNonQuery();
+
+                    return RedirectToAction("Login", "Home");
+
+                }
+            }
+
+        }
 		
 		public IActionResult Login()
 		{
@@ -612,17 +629,22 @@ namespace AWSDB.Controllers
                     if (resultCode == 50002)
                     {
                         TempData["Message"] = "Codigo duplicado";
-                        return RedirectToAction("Index", "Home", new { user = username });
+                        return RedirectToAction("Modify", "Home", new { user = username, code = codigo });
+                    }
+                    else if (resultCode == 50003)
+                    {
+                        TempData["Message"] = "Nombre duplicado";
+                        return RedirectToAction("Modify", "Home", new { user = username, code = codigo });
                     }
                     else if (resultCode == 0)
                     {
-                        TempData["Message"] = "Modificacion Exitosa”)";
+                        TempData["Message"] = "Modificacion Exitosa";
                         return RedirectToAction("Index", "Home", new { user = username });
                     }
                     else
                     {
                         TempData["Message"] = "Surgió un error en la BD";
-                        return RedirectToAction("Index", "Home", new { user = username });
+                        return RedirectToAction("Modify", "Home", new { user = username, code = codigo });
                     }
                 }
             }
@@ -678,12 +700,12 @@ namespace AWSDB.Controllers
 					connection.Close();
 					if (resultCode == 0)
 					{
-						TempData["Message"] = "Borrar Exitoso”)";
+						TempData["Message"] = "Borrar Exitoso";
 						return RedirectToAction("Index", "Home", new { user = username });
 					}
 					else
 					{
-						TempData["Message"] = "Surgió un error en la BD";
+						TempData["Message"] = "Surgio un error en la BD";
 						return RedirectToAction("Index", "Home", new { user = username });
 					}
 				}
