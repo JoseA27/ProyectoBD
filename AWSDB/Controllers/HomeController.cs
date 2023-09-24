@@ -98,6 +98,7 @@ namespace AWSDB.Controllers
             return RedirectToAction("IndexNombre", "Home", new { user = model.UserName, nombre = model.NewArticulo.Nombre });
         }
         public IActionResult IndexCantidad(string user, int cantidad)
+
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -123,7 +124,7 @@ namespace AWSDB.Controllers
                         }
 
                         int resultCode = Convert.ToInt32(command.Parameters["@outResultCode"].Value);
-                        connection.Close();
+                        connection.Close(); 
 
 
                         CombinedViewModel views = new CombinedViewModel();
@@ -142,7 +143,12 @@ namespace AWSDB.Controllers
             {
                 return RedirectToAction("Index", "Home", new { user = model.UserName });
             }
-            return RedirectToAction("IndexCantidad", "Home", new { user = model.UserName, cantidad = Convert.ToInt32(model.NewArticulo.Cantidad)});
+            if (validarEntero(model.NewArticulo.Cantidad) == true)
+            {
+                return RedirectToAction("IndexCantidad", "Home", new { user = model.UserName, cantidad = Convert.ToInt32(model.NewArticulo.Cantidad) });
+            }
+            TempData["Message"] = "La cantidad debe de ser un numero entero";
+            return RedirectToAction("Index", "Home", new { user = model.UserName });
         }
         public IActionResult IndexClase(string user, string clase)
         {
@@ -392,7 +398,7 @@ namespace AWSDB.Controllers
 					connection.Close();
 					if (resultCode != 50002)
 					{
-						TempData["Message"] = "El usuario no existe o la contrasenna es incorrecta";
+						TempData["Message"] = "Combinacion de usuario/password no existe en la BD";
 						return RedirectToAction("Login", "Home");
 					}
 					else
@@ -407,10 +413,10 @@ namespace AWSDB.Controllers
 		
         public IActionResult Insertar(CombinedViewModel model)
         {
-            if (validarDatos(model.NewArticulo.Nombre, model.NewArticulo.Precio) == false)
+            if (validarDatos(model.NewArticulo.Codigo ,model.NewArticulo.Nombre, model.NewArticulo.Precio) == false)
             {
                 TempData["Message"] = "Ingrese la informacion del articulo de forma correcta. Nombre: Solo puede contener letras, espacio y guiones. Precio: Solo puede contener numeros enteros o decimales";
-                return RedirectToAction("Create", "Home");
+                return RedirectToAction("Create", "Home", new { user = model.UserName });
             }
             string nombre = model.NewArticulo.Nombre;
             decimal precio = Convert.ToDecimal(model.NewArticulo.Precio);
@@ -443,7 +449,7 @@ namespace AWSDB.Controllers
                         return RedirectToAction("Create", "Home", new { user = username });
                     }
 					else if(resultCode==50003) {
-                        TempData["Message"] = "Articulo con código duplicado”)";
+                        TempData["Message"] = "Articulo con codigo duplicado";
                         return RedirectToAction("Create", "Home", new { user = username });
                     }
                     else
@@ -454,9 +460,9 @@ namespace AWSDB.Controllers
                 }
             }
         }
-        public bool validarDatos(string nombre, string precio)
+        public bool validarDatos(string codigo, string nombre, string precio)
 		{
-			if (nombre == null || precio == null) { return false; }
+			if (nombre == null || precio == null || codigo == null) { return false; }
 			var regex = @"^(?!.*\s{2,})[a-zA-Z\-][a-zA-Z\- ]*[a-zA-Z\-]$";
 			var match = Regex.Match(nombre, regex, RegexOptions.IgnoreCase);
 			var regex2 = @"^(?:\d+|\d+\.\d+)$";
@@ -467,7 +473,20 @@ namespace AWSDB.Controllers
 			}
 			return false;
 		}
-		/*
+
+        public bool validarEntero(string cantidad)
+        {
+
+            var regex = @"^-?\d+$";
+            var match = Regex.Match(cantidad, regex, RegexOptions.IgnoreCase);
+
+            if (match.Success)
+            {
+                return true;
+            }
+            return false;
+        }
+        /*
 		public IActionResult buscarNombre(CombinedViewModel model)
 		{
 			string nombre = model.NewArticulo.Nombre;
@@ -518,7 +537,7 @@ namespace AWSDB.Controllers
 			}
 		}*/
 
-		public IActionResult validarModificar(CombinedViewModel model)
+        public IActionResult validarModificar(CombinedViewModel model)
 		{
 			string codigo = model.NewArticulo.Codigo;
 			string username = model.UserName;
@@ -594,10 +613,10 @@ namespace AWSDB.Controllers
 
         public IActionResult Modificar(CombinedViewModel model)
         {
-            if (validarDatos(model.NewArticulo.Nombre, model.NewArticulo.Precio) == false)
+            if (validarDatos(model.NewArticulo.Codigo ,model.NewArticulo.Nombre, model.NewArticulo.Precio) == false)
             {
                 TempData["Message"] = "Ingrese la informacion del articulo de forma correcta. Nombre: Solo puede contener letras, espacio y guiones. Precio: Solo puede contener numeros enteros o decimales";
-                return RedirectToAction("Create", "Home");
+                return RedirectToAction("Modify", "Home", new { user = model.UserName, code = model.NewArticulo.Codigo });
             }
             string nombre = model.NewArticulo.Nombre;
 
@@ -628,12 +647,12 @@ namespace AWSDB.Controllers
                     connection.Close();
                     if (resultCode == 50002)
                     {
-                        TempData["Message"] = "Codigo duplicado";
+                        TempData["Message"] = "No puede actualizar código de articulo con un código ya existente";
                         return RedirectToAction("Modify", "Home", new { user = username, code = codigo });
                     }
                     else if (resultCode == 50003)
                     {
-                        TempData["Message"] = "Nombre duplicado";
+                        TempData["Message"] = "No puede actualizar nombre de articulo con un nombre ya existente";
                         return RedirectToAction("Modify", "Home", new { user = username, code = codigo });
                     }
                     else if (resultCode == 0)
